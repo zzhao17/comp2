@@ -1,7 +1,6 @@
 given_labels = csvread('labels.csv');
 observations = csvread('observations.csv');
-
-clusters = kmeans(observations,3);
+clusters = csvread('cluster_file.csv');
 
 bot1_obs = observations(clusters==1,:);
 bot2_obs = observations(clusters==2,:);
@@ -18,11 +17,12 @@ disp('converted the arrays');
 [bot1_est_transitions,bot1_est_emissions] = setup_and_train_hmm(bot1_converted_array);
 disp('bot1 hmm done');
 
-[bot2_est_transitions,bot2_1est_emissions] = setup_and_train_hmm(bot2_converted_array);
+[bot2_est_transitions,bot2_est_emissions] = setup_and_train_hmm(bot2_converted_array);
 disp('bot2 hmm done');
 
-[bot3_est_transitions,bot3_1est_emissions] = setup_and_train_hmm(bot3_converted_array);
+[bot3_est_transitions,bot3_est_emissions] = setup_and_train_hmm(bot3_converted_array);
 disp('bot3 hmm done');
+
 
 final_state_predictions = ones(3000,1)*-1;
 
@@ -46,11 +46,16 @@ end
 
 num_correct = 0;
 
-for i = 1:200
+for i = 1:size(given_labels)
    if final_state_predictions(i) == given_labels(i)
        num_correct = num_correct + 1;
+   else
+      [final_state_predictions(i) given_labels(i)] 
    end
 end
+
+cfinal = [linspace(1,2800,2800)' final_state_predictions(201:3000,:)];
+csvwrite('hmm_predictions.csv',cfinal);
 
 accuracy = num_correct / 200
 
