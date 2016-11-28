@@ -6,7 +6,7 @@ function [est_transitions,est_emissions] = setup_and_train_hmm(input_array)
 csvwrite('initial_transition.csv',transition);
 csvwrite('initial_emission.csv',emission);
 
-[est_transitions,est_emissions] = hmmtrain(input_array,transition,emission,'Verbose',true,'Tolerance',0.0001,'Maxiterations',100);
+[est_transitions,est_emissions] = hmmtrain(input_array,transition,emission,'Verbose',true,'Tolerance',0.0001,'Maxiterations',1000);
 
 end
 
@@ -15,7 +15,7 @@ end
 
 
 function [emission] = create_initial_emissions()
-    emission = rand(25,18)*0.001;
+    emission = zeros(25,18)+0.001;
     emission(1,1) = 1;
     emission(2,2) = 1;
     emission(3,3) = 1;
@@ -48,7 +48,7 @@ end
 
 
 function [transition] = create_initial_transition()
-    transition = rand(25,25)*0.001;
+    transition = zeros(25,25)+0.001;
     
     for i=1:25
        if mod(i,5) == 1
