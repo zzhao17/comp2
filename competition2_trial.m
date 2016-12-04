@@ -46,34 +46,56 @@ end
 
 num_correct = 0;
 
-final_state_predictions_copy = final_state_predictions;
 
-for i = 1:3000
-   if final_state_predictions_copy(i) == 17 && clusters(i) == 1
-       final_state_predictions_copy(i) = 13;
-   elseif final_state_predictions_copy(i) == 11 && clusters(i) == 2
-       final_state_predictions_copy(i) = 7;
-   elseif final_state_predictions_copy(i) == 16 && clusters(i) == 3
-       final_state_predictions_copy(i) = 8;
-   elseif final_state_predictions_copy(i) == 22 && clusters(i) == 3
-       final_state_predictions_copy(i) = 14;
-   elseif final_state_predictions_copy(i) == 16 && clusters(i) == 1
-       final_state_predictions_copy(i) = 8;
-   end
-end
+f = final_state_predictions;
+
+f_copy = f(find(clusters==1),:);
+f_copy(f_copy==16) = 8;
+f_copy(f_copy==17) = 13;
+f(find(clusters==1),:) = f_copy;
+
+
+f_copy = f(find(clusters==2),:);
+f_copy(f_copy==11) = 7;
+f_copy(f_copy==13) = 17;
+f_copy(f_copy==23) = 19;
+f_copy(f_copy==5) = 19;
+f(find(clusters==2),:) = f_copy;
+
+
+f_copy = f(find(clusters==3),:);
+f_copy(f_copy==11) = 7;
+f_copy(f_copy==13) = 17;
+f_copy(f_copy==23) = 19;
+f_copy(f_copy==5) = 19;
+f_copy(f_copy==22) = 14;
+f_copy(f_copy==21) = 9;
+f_copy(f_copy==16) = 8;
+f(find(clusters==3),:) = f_copy;
+
 
 for i = 1:size(given_labels)
-   if final_state_predictions_copy(i) == given_labels(i)
+   if f(i) == given_labels(i)
        num_correct = num_correct + 1;
    else
-      [clusters(i) final_state_predictions_copy(i) given_labels(i)] 
+      [clusters(i) f(i) given_labels(i)] 
    end
 end
 
-cfinal = [linspace(1,2800,2800)' final_state_predictions_copy(201:3000,:)];
+cfinal = [linspace(1,2800,2800)' f(201:3000,:)];
 csvwrite('hmm_predictions.csv',cfinal);
 
 accuracy = num_correct / 200
+
+% colormap('hot')
+% subplot(1,3,1)
+% imagesc(bot1_est_transitions)
+% subplot(1,3,2)
+% imagesc(bot2_est_transitions)
+% subplot(1,3,3)
+% imagesc(bot3_est_transitions)
+% colorbar
+
 
 % csvwrite('clusters.csv',clusters);
 % csvwrite('bot1_est_emissions.csv',bot1_est_emissions);

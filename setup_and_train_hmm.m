@@ -6,7 +6,7 @@ function [est_transitions,est_emissions] = setup_and_train_hmm(input_array)
 csvwrite('initial_transition.csv',transition);
 csvwrite('initial_emission.csv',emission);
 
-[est_transitions,est_emissions] = hmmtrain(input_array,transition,emission,'Verbose',true,'Tolerance',0.0001,'Maxiterations',1000);
+[est_transitions,est_emissions] = hmmtrain(input_array,transition,emission,'Verbose',true,'Tolerance',0.0001,'Maxiterations',100);
 
 end
 
@@ -100,6 +100,7 @@ function [transition] = create_initial_transition()
           transition(i,i+5) = 1/4; 
        end
     end
+    
     
     transition = bsxfun(@rdivide, transition, sum(transition,2));
 end
