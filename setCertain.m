@@ -1,6 +1,6 @@
 % hmm_prediction is kaggle submission file, 2800 entries without header
 function setCertain(hmm_prediction)
-hmm= hmm_prediction(:,2)
+hmm= hmm_prediction(:,2);
 identicalRowMatrix= idendicalRowMatrix();
 labels= csvread('labels.csv');
 observations= csvread('observations.csv');
@@ -56,7 +56,7 @@ end
 certain= y(201:3000,2);
 idx= find(certain);
 for i=1: size(idx);
-    hmm(idx(i))=certain(idx(i),2)
+    hmm(idx(i))=certain(idx(i));
 end
 
 % adjust_prediction= [linspace(1,2800,2800)' hmm];
